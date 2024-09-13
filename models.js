@@ -1,20 +1,43 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, read, readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 // Averiguar que importar de NODE para realizar el hash del pass
 // Averiguar como "activar" la lectura de las variables de entorno del archivo .env (dotenv)
 import { handleError } from "./utils/handleError.js";
+import { type } from "node:os";
 
 // 1° recuperar variables de entorno
 
 // 2° Declarar los metodos
+const PATH_FILE_USERS =process.env.PATH_FILE_USERS;
 
 const getUsers = () => {
+    
   try {
+    const exists =existsSync(PATH_FILE_USERS);
+
+if(!exists){
+throw new Error("File Not Found... ");
+}
+const Users =JSON.parse(readFileSync(PATH_FILE_USERS));
+return Users;
+
   } catch (error) {
+const dbError = JSON.parse(readFileSync("./error/log.json"));
+const newError ={
+  id:randomUUID(),
+  type: error.message,
+  date: new Date().toISOString(),
+};
+dbError.push(newError);
+writeFileSync("./error/log.json",JSON.stringify(dbError));
+return error.message;
+
     // const objError = handleError()
     // return objError;
   }
 };
+const respuesta =getUsers();
+console.log(respuesta);
 
 const getUserById = (id) => {
   try {
