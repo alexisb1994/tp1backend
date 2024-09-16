@@ -4,12 +4,19 @@ import { existsSync, read, readFileSync, writeFileSync } from "node:fs";
 // Averiguar como "activar" la lectura de las variables de entorno del archivo .env (dotenv)
 import { handleError } from "./utils/handleError.js";
 // import { type } from "node:os";
-
+import dotenv from 'dotenv';
 // 1° recuperar variables de entorno
 
 // 2° Declarar los metodos
 
+dotenv.config();
+
 const PATH_FILE_USERS = process.env.PATH_FILE_USERS;
+
+const PATH_FILE_ERROR = process.env.PATH_FILE_ERROR;
+
+// console.log(`PATH_FILE_USERS: ${PATH_FILE_USERS}`);
+
 
 const getUsers = (ulrFile) => {
  
@@ -29,7 +36,7 @@ return users;
 
   } catch (error) {
 
-const objError = handleError(error,"./error/log.json")
+const objError = handleError(error,PATH_FILE_ERROR)
 return objError;
     // const objError = handleError()
     // return objError;
@@ -38,6 +45,7 @@ return objError;
 // const respuesta =getUsers(PATH_FILE_USERS);
 // console.log(respuesta);
 
+////////////////////////
 const getUserById = (PATH_FILE_USERS, id) => {
   try {
     if (!id) {
@@ -59,6 +67,8 @@ const getUserById = (PATH_FILE_USERS, id) => {
   }
 };
 console.log(getUserById(PATH_FILE_USERS,1));
+///////////////////////////////////////////
+
 // addUser recibe un objeto con toda la data para el nuevo usuario
 // valida que esten los datos míminos para añadir un nuevo usuario
 // valida que el nombre sea un string
@@ -83,4 +93,4 @@ const deleteUser = (id) => {
   } catch (error) {}
 };
 
-export { getUsers, getUserById, addUser, updateUser, deleteUser };
+export { getUsers,getUserById,addUser, updateUser, deleteUser };
