@@ -5,6 +5,7 @@ import { existsSync, read, readFileSync, writeFileSync } from "node:fs";
 import { handleError } from "./utils/handleError.js";
 // import { type } from "node:os";
 import dotenv from 'dotenv';
+import { randomUUID,createHash  } from "node:crypto";
 // 1° recuperar variables de entorno
 
 // 2° Declarar los metodos
@@ -46,7 +47,7 @@ return objError;
 // console.log(respuesta);
 
 ////////////////////////
-const getUserById = (PATH_FILE_USERS, id) => {
+const getUserById = (id) => {
   try {
     if (!id) {
       throw new Error("ID is missing");
@@ -62,11 +63,12 @@ const getUserById = (PATH_FILE_USERS, id) => {
 
     return user;
   } catch (error) {
-    const objError = handleError(error,"./error/log.json")
+    const objError = handleError(error,PATH_FILE_ERROR)
     return objError;
   }
 };
-console.log(getUserById(PATH_FILE_USERS,1));
+// console.log(getUserById(2));
+
 ///////////////////////////////////////////
 
 // addUser recibe un objeto con toda la data para el nuevo usuario
@@ -76,9 +78,55 @@ console.log(getUserById(PATH_FILE_USERS,1));
 // valida que el email sea un string y que no se repita
 // hashea la contraseña antes de registrar al usuario
 const addUser = (userData) => {
+
   try {
-  } catch (error) {}
+    const {nombre,apellido,password,email}=userData;
+if(!nombre|| !apellido||!password|| !email){
+  throw new Error("Missing data")
+}
+if (typeof nombre!=='string'|| typeof apellido!=='string'|| typeof password!=='string'||typeof email!=='string'){
+throw new Error("Data invalid")
+}
+const users=getUsers(PATH_FILE_USERS);
+
+const emailExists = users.some(user => user.email === email);
+if (emailExists) {
+  throw new Error("Email already exists");
+}
+const hash = createHash("sha256").update(password).digest("hex")
+
+    /////
+    const newUser={
+      id:randomUUID(),
+      nombre,
+      apellido,
+      email,
+      password:hash,
+      isLoggedIn:false,
+    
+    };
+   
+    users.push(newUser);
+    writeFileSync(PATH_FILE_USERS,JSON.stringify(users));
+    
+    return newUser;
+
+  } catch (error) {
+    const objError=handleError(error,PATH_FILE_ERROR);
+    return objError; 
+  }
 };
+////////////
+
+const userData={
+  nombre:"a",
+  apellido:"b",
+  email:"jg12434@gmail.com",
+  password:"1234"
+}
+const respuesta =addUser(userData);
+console.log(respuesta);
+
 
 // todos los datos del usuario seleccionado se podrían modificar menos el ID
 // si se modifica la pass debería ser nuevamente hasheada
