@@ -5,7 +5,7 @@ import { existsSync, read, readFileSync, writeFileSync } from "node:fs";
 import { handleError } from "./utils/handleError.js";
 // import { type } from "node:os";
 import dotenv from 'dotenv';
-import { randomUUID,createHash  } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 // 1° recuperar variables de entorno
 
 // 2° Declarar los metodos
@@ -20,25 +20,25 @@ const PATH_FILE_ERROR = process.env.PATH_FILE_ERROR;
 
 
 const getUsers = (ulrFile) => {
- 
-  try{
-    if (!ulrFile){
-throw new Error("Access denied ");
-  } 
 
-   const exists =existsSync(ulrFile);
+  try {
+    if (!ulrFile) {
+      throw new Error("Access denied ");
+    }
 
-if(!exists){
-  writeFileSync(ulrFile,JSON.stringify([]));
-return[];
-}
-const users =JSON.parse(readFileSync(ulrFile));
-return users;
+    const exists = existsSync(ulrFile);
+
+    if (!exists) {
+      writeFileSync(ulrFile, JSON.stringify([]));
+      return [];
+    }
+    const users = JSON.parse(readFileSync(ulrFile));
+    return users;
 
   } catch (error) {
 
-const objError = handleError(error,PATH_FILE_ERROR)
-return objError;
+    const objError = handleError(error, PATH_FILE_ERROR)
+    return objError;
     // const objError = handleError()
     // return objError;
   }
@@ -63,7 +63,7 @@ const getUserById = (id) => {
 
     return user;
   } catch (error) {
-    const objError = handleError(error,PATH_FILE_ERROR)
+    const objError = handleError(error, PATH_FILE_ERROR)
     return objError;
   }
 };
@@ -80,65 +80,115 @@ const getUserById = (id) => {
 const addUser = (userData) => {
 
   try {
-    const {nombre,apellido,password,email}=userData;
-if(!nombre|| !apellido||!password|| !email){
-  throw new Error("Missing data")
-}
-if (typeof nombre!=='string'|| typeof apellido!=='string'|| typeof password!=='string'||typeof email!=='string'){
-throw new Error("Data invalid")
-}
-const users=getUsers(PATH_FILE_USERS);
+    const { nombre, apellido, password, email } = userData;
+    if (!nombre || !apellido || !password || !email) {
+      throw new Error("Missing data")
+    }
+    if (typeof nombre !== 'string' || typeof apellido !== 'string' || typeof password !== 'string' || typeof email !== 'string') {
+      throw new Error("Data invalid")
+    }
+    const users = getUsers(PATH_FILE_USERS);
 
-const emailExists = users.some(user => user.email === email);
-if (emailExists) {
-  throw new Error("Email already exists");
-}
-const hash = createHash("sha256").update(password).digest("hex")
+    const emailExists = users.some(user => user.email === email);
+    if (emailExists) {
+      throw new Error("Email already exists");
+    }
+    const hash = createHash("sha256").update(password).digest("hex")
 
     /////
-    const newUser={
-      id:randomUUID(),
+    const newUser = {
+      id: randomUUID(),
       nombre,
       apellido,
       email,
-      password:hash,
-      isLoggedIn:false,
-    
+      password: hash,
+      isLoggedIn: false,
+
     };
-   
+
     users.push(newUser);
-    writeFileSync(PATH_FILE_USERS,JSON.stringify(users));
-    
+    writeFileSync(PATH_FILE_USERS, JSON.stringify(users));
+
     return newUser;
 
   } catch (error) {
-    const objError=handleError(error,PATH_FILE_ERROR);
-    return objError; 
+    const objError = handleError(error, PATH_FILE_ERROR);
+    return objError;
   }
 };
 ////////////
 
-const userData={
-  nombre:"a",
-  apellido:"b",
-  email:"jg12434@gmail.com",
-  password:"1234"
+const userData = {
+  nombre: "a",
+  apellido: "b",
+  email: "jg12434@gmail.com",
+  password: "1234"
 }
-const respuesta =addUser(userData);
-console.log(respuesta);
+// const respuesta = addUser(userData);
+// console.log(respuesta);
 
 
 // todos los datos del usuario seleccionado se podrían modificar menos el ID
 // si se modifica la pass debería ser nuevamente hasheada
 // si se modifica el email, validar que este no exista
-const updateUser = (userData) => {
+const updateUser = (id, userData) => {
   try {
-  } catch (error) {}
+    const { nombre, apellido, password, email } = userData;
+
+    if (!id || !userData) {
+      throw new Error("ID is missing");
+    }
+    const users = getUsers(PATH_FILE_USERS);
+
+    const emailExists = users.some(user => user.email === email);
+    if (emailExists) {
+      throw new Error("Email already exists");
+    }
+    const hash = createHash("sha256").update(password).digest("hex")
+
+
+    const user = users.find((u) => u.id === id);
+
+    if (!user) {
+      throw new Error("user not found");
+    }
+
+    if (nombre) user.nombre = nombre;
+    if (apellido) user.apellido = apellido;
+    if (email) user.email = email;
+    if (password) user.password = hash;
+
+    writeFileSync(PATH_FILE_USERS, JSON.stringify(users));
+
+    return user;
+
+  } catch (error) {
+    const objError = handleError(error, PATH_FILE_ERROR)
+    return objError;
+  }
+
 };
+
+const userToUpdate = {
+  id: "6203e389-4435-4ba7-b327-cab982bd5de6",
+  nombre: "PRUEBA",
+  apellido: "b",
+  email: "jg1243454asd@gmail.com",
+  password: "ale",
+  isLoggedIn: false
+
+};
+
+const respuesta = updateUser("6203e389-4435-4ba7-b327-cab982bd5de6", userToUpdate);
+
+console.log(respuesta);
+
+/////////////
+
 
 const deleteUser = (id) => {
   try {
-  } catch (error) {}
+  } catch (error) { }
 };
 
-export { getUsers,getUserById,addUser, updateUser, deleteUser };
+export { getUsers, getUserById, addUser, updateUser, deleteUser };
