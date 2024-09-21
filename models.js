@@ -19,20 +19,20 @@ const PATH_FILE_ERROR = process.env.PATH_FILE_ERROR;
 // console.log(`PATH_FILE_USERS: ${PATH_FILE_USERS}`);
 
 
-const getUsers = (ulrFile) => {
+const getUsers = (PATH_FILE_USERS) => {
 
   try {
-    if (!ulrFile) {
+    if (!PATH_FILE_USERS) {
       throw new Error("Access denied ");
     }
 
-    const exists = existsSync(ulrFile);
+    const exists = existsSync(PATH_FILE_USERS);
 
     if (!exists) {
-      writeFileSync(ulrFile, JSON.stringify([]));
+      writeFileSync(PATH_FILE_USERS, JSON.stringify([]));
       return [];
     }
-    const users = JSON.parse(readFileSync(ulrFile));
+    const users = JSON.parse(readFileSync(PATH_FILE_USERS));
     return users;
 
   } catch (error) {
