@@ -147,7 +147,7 @@ const updateUser = (id, userData) => {
     const hash = createHash("sha256").update(password).digest("hex")
 
 
-    const user = users.find((u) => u.id === id);
+    const user = getUserById(id);
 
     if (!user) {
       throw new Error("user not found");
@@ -179,16 +179,37 @@ const userToUpdate = {
 
 };
 
-const respuesta = updateUser("6203e389-4435-4ba7-b327-cab982bd5de6", userToUpdate);
+// const respuesta = updateUser("6203e389-4435-4ba7-b327-cab982bd5de6", userToUpdate);
 
-console.log(respuesta);
+// console.log(respuesta);
 
 /////////////
 
 
 const deleteUser = (id) => {
+
   try {
-  } catch (error) { }
+    
+  if (!id) {
+    throw new Error("ID is missing");
+  }
+
+  const users=getUsers(PATH_FILE_USERS);
+  const user = getUserById(id);
+
+  const newUser= users.filter((user) => user.id !==id); 
+writeFileSync(PATH_FILE_USERS,JSON.stringify(newUser));
+
+return user;
+  } catch (error) { 
+    const objError = handleError(error, PATH_FILE_ERROR)
+    return objError;
+  }
 };
+
+// const respuesta =deleteUser("0c4bb24b-84e8-48e6-bb13-e56c9baba074");
+
+// console.log(respuesta);
+
 
 export { getUsers, getUserById, addUser, updateUser, deleteUser };
