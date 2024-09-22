@@ -140,7 +140,7 @@ const updateUser = (id, userData) => {
     }
     const users = getUsers(PATH_FILE_USERS);
     const user = users.find(user=> user.id === id)
-    
+
     const emailExists = users.some(user => user.email === email);
     if (emailExists) {
       throw new Error("Email already exists");
@@ -180,9 +180,9 @@ const userToUpdate = {
 };
 
 
-const respuesta = updateUser("d543b421-bc98-478b-8d9a-ad7286b970aa",userToUpdate);
+// const respuesta = updateUser("d543b421-bc98-478b-8d9a-ad7286b970aa",userToUpdate);
 
-console.log(respuesta);
+// console.log(respuesta);
 ///////////////
 // const updateUser = (id, userData) => {
 //   try {

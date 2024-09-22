@@ -44,9 +44,11 @@ break;
 
 case "update":
 console.log(updateUser(args[1],createUpdateUser(args)));
-
 break; 
 
+case "delete":
+    console.log(deleteUser(args[1]));
+    break;
 default:
     console.log("commant invalid..");
     break;
