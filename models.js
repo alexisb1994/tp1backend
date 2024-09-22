@@ -139,7 +139,8 @@ const updateUser = (id, userData) => {
       throw new Error("ID is missing");
     }
     const users = getUsers(PATH_FILE_USERS);
-
+    const user = users.find(user=> user.id === id)
+    
     const emailExists = users.some(user => user.email === email);
     if (emailExists) {
       throw new Error("Email already exists");
@@ -147,7 +148,7 @@ const updateUser = (id, userData) => {
     const hash = createHash("sha256").update(password).digest("hex")
 
 
-    const user = getUserById(id);
+   
 
     if (!user) {
       throw new Error("user not found");
@@ -168,21 +169,64 @@ const updateUser = (id, userData) => {
   }
 
 };
-
 const userToUpdate = {
-  id: "6203e389-4435-4ba7-b327-cab982bd5de6",
-  nombre: "PRUEBA",
+  
+  nombre: "EMPANADAS",
   apellido: "b",
-  email: "jg1243454asd@gmail.com",
+  email: "EMPANADA@gmail.com",
   password: "ale",
   isLoggedIn: false
 
 };
 
-// const respuesta = updateUser("6203e389-4435-4ba7-b327-cab982bd5de6", userToUpdate);
 
-// console.log(respuesta);
+const respuesta = updateUser("d543b421-bc98-478b-8d9a-ad7286b970aa",userToUpdate);
 
+console.log(respuesta);
+///////////////
+// const updateUser = (id, userData) => {
+//   try {
+//     const { nombre, apellido, password, email } = userData;
+
+//     if (!id || !userData) {
+//       throw new Error("ID or userData is missing");
+//     }
+
+//     // Obtiene la lista de usuarios
+//     const users = getUsers(PATH_FILE_USERS);
+
+//     // Verifica si el email ya existe, pero ignora el del usuario actual que estás actualizando
+//     const emailExists = users.some(user => user.email === email && user.id !== id);
+//     if (emailExists) {
+//       throw new Error("Email already exists");
+//     }
+
+//     // Busca el índice del usuario en el arreglo
+//     const user = getUserById(id);
+//     if (!user) {
+//           throw new Error("user not found");
+//            }
+    
+//            // Si se pasa un password, lo hashea antes de actualizarlo
+//     const hash = password ? createHash("sha256").update(password).digest("hex") : users[index].password;
+
+//     // Actualiza las propiedades del usuario en el arreglo de usuarios
+//     if (nombre) users.nombre = nombre;
+//     if (apellido) users.apellido = apellido;
+//     if (email) users.email = email;
+//     if (password) users.password = hash;
+
+//     // Guarda los cambios en el archivo
+//     writeFileSync(PATH_FILE_USERS, JSON.stringify(users));
+
+//     // Retorna el usuario actualizado
+//     return users[index];
+
+//   } catch (error) {
+//     const objError = handleError(error, PATH_FILE_ERROR);
+//     return objError;
+//   }
+// };
 /////////////
 
 

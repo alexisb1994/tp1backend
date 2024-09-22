@@ -21,6 +21,15 @@ password:args[4],
 };
 };
 
+const createUpdateUser=(args)=>{ 
+    return{
+nombre:args[2],
+apellido:args[3],
+email:args[4],
+password:args[5],    
+};
+};
+
 
 switch(action){
 case "list":
@@ -31,9 +40,14 @@ case "list":
 case "add":
 const newUser=createNewUser(args);
 console.log(addUser(newUser));
-
 break;
- default:
+
+case "update":
+console.log(updateUser(args[1],createUpdateUser(args)));
+
+break; 
+
+default:
     console.log("commant invalid..");
     break;
 }
