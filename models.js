@@ -1,14 +1,13 @@
-import { existsSync, read, readFileSync, writeFileSync } from "node:fs";
 // import { randomUUID } from "node:crypto";
 // Averiguar que importar de NODE para realizar el hash del pass
 // Averiguar como "activar" la lectura de las variables de entorno del archivo .env (dotenv)
-import { handleError } from "./utils/handleError.js";
 // import { type } from "node:os";
+// 1° recuperar variables de entorno
+// 2° Declarar los metodos
+import { existsSync, read, readFileSync, writeFileSync } from "node:fs";
+import { handleError } from "./utils/handleError.js";
 import dotenv from 'dotenv';
 import { randomUUID, createHash } from "node:crypto";
-// 1° recuperar variables de entorno
-
-// 2° Declarar los metodos
 
 dotenv.config();
 
@@ -16,7 +15,7 @@ const PATH_FILE_USERS = process.env.PATH_FILE_USERS;
 
 const PATH_FILE_ERROR = process.env.PATH_FILE_ERROR;
 
-// console.log(`PATH_FILE_USERS: ${PATH_FILE_USERS}`);
+
 
 
 const getUsers = (PATH_FILE_USERS) => {
@@ -39,8 +38,7 @@ const getUsers = (PATH_FILE_USERS) => {
 
     const objError = handleError(error, PATH_FILE_ERROR)
     return objError;
-    // const objError = handleError()
-    // return objError;
+   
   }
 };
 // const respuesta =getUsers(PATH_FILE_USERS);
@@ -118,12 +116,12 @@ const addUser = (userData) => {
 };
 ////////////
 
-const userData = {
-  nombre: "a",
-  apellido: "b",
-  email: "jg12434@gmail.com",
-  password: "1234"
-}
+// const userData = {
+//   nombre: "a",
+//   apellido: "b",
+//   email: "jg12434@gmail.com",
+//   password: "1234"
+// }
 // const respuesta = addUser(userData);
 // console.log(respuesta);
 
@@ -169,17 +167,17 @@ const updateUser = (id, userData) => {
   }
 
 };
-const userToUpdate = {
+// const userToUpdate = {
   
-  nombre: "EMPANADAS",
-  apellido: "b",
-  email: "EMPANADA@gmail.com",
-  password: "ale",
-  isLoggedIn: false
+//   nombre: "EMPANADAS",
+//   apellido: "b",
+//   email: "EMPANADA@gmail.com",
+//   password: "ale",
+//   isLoggedIn: false
 
-};
-
-
+// };
+// const respuesta = updateUser("d543b421-bc98-478b-8d9a-ad7286b970aa",userToUpdate);
+// console.log(respuesta);
 /////////////
 
 
